@@ -22,6 +22,9 @@
 		<module>folimall-order</module>
 		<module>folimall-product</module>
 		<module>folimall-ware</module>
+		<module>renren-generator</module>
+		<module>renren-fast</module>
+		<module>folimall-common</module>
 	</modules>
 
 </project>
