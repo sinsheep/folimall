@@ -33,6 +33,12 @@ public class AttrGroupController {
     @Autowired
     private CategoryService categoryService;
 
+
+
+    public R attrRelation(){
+        return R.ok();
+    }
+
     /**
      * 列表
      */

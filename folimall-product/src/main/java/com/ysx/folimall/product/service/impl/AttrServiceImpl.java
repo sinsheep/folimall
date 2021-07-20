@@ -1,12 +1,11 @@
 package com.ysx.folimall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.ysx.common.constant.ProductConstant;
 import com.ysx.folimall.product.entity.AttrAttrgroupRelationEntity;
 import com.ysx.folimall.product.entity.AttrGroupEntity;
 import com.ysx.folimall.product.entity.CategoryEntity;
-import com.ysx.folimall.product.service.AttrAttrgroupRelationService;
-import com.ysx.folimall.product.service.AttrGroupService;
-import com.ysx.folimall.product.service.CategoryService;
+import com.ysx.folimall.product.service.*;
 import com.ysx.folimall.product.vo.AttrRespVo;
 import com.ysx.folimall.product.vo.AttrVo;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +24,6 @@ import com.ysx.common.utils.Query;
 
 import com.ysx.folimall.product.dao.AttrDao;
 import com.ysx.folimall.product.entity.AttrEntity;
-import com.ysx.folimall.product.service.AttrService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -57,18 +55,17 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         //保存基本信息
         this.save(attrEntity);
         //保存关联关系
-
-        AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
-        relationEntity.setAttrGroupId(attr.getAttrGroupId());
-        relationEntity.setAttrId(attrEntity.getAttrId());
-        relationService.save(relationEntity);
-
-
+        if(attr.getAttrType()== ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            relationEntity.setAttrGroupId(attr.getAttrGroupId());
+            relationEntity.setAttrId(attrEntity.getAttrId());
+            relationService.save(relationEntity);
+        }
     }
 
     @Override
-    public PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId) {
-        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<>();
+    public PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId, String type) {
+        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type","base".equalsIgnoreCase(type)?ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode():ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());;
         if (catalogId != 0) {
             queryWrapper.eq("catelog_id", catalogId);
         }
@@ -88,11 +85,14 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         List<AttrRespVo> respVos = records.stream().map((attrEntity -> {
             AttrRespVo attrRespVo = new AttrRespVo();
             BeanUtils.copyProperties(attrEntity, attrRespVo);
-            AttrAttrgroupRelationEntity attrId = relationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
-            if (attrId != null) {
-                AttrGroupEntity byId = attrGroupService.getById(attrId.getAttrGroupId());
-                if(byId!=null){
-                    attrRespVo.setGroupName(byId.getAttrGroupName());
+
+            if("base".equalsIgnoreCase(type)){
+                AttrAttrgroupRelationEntity attrId = relationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
+                if (attrId != null) {
+                    AttrGroupEntity byId = attrGroupService.getById(attrId.getAttrGroupId());
+                    if(byId!=null){
+                        attrRespVo.setGroupName(byId.getAttrGroupName());
+                    }
                 }
             }
             CategoryEntity categoryEntity = categoryService.getById(attrEntity.getCatelogId());
@@ -112,13 +112,15 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         AttrEntity attrEntity = this.getById(attrId);
         BeanUtils.copyProperties(attrEntity, respVo);
 
-        //设置分组信息
-        AttrAttrgroupRelationEntity relationEntity = relationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrId));
-        if(relationEntity!=null){
-            respVo.setAttrGroupId(relationEntity.getAttrGroupId());
-            AttrGroupEntity attrGroupEntity = attrGroupService.getById(relationEntity.getAttrGroupId());
-            if(attrGroupEntity!=null){
-                respVo.setGroupName(attrGroupEntity.getAttrGroupName());
+        if(attrEntity.getAttrType()== ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+            //设置分组信息
+            AttrAttrgroupRelationEntity relationEntity = relationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrId));
+            if(relationEntity!=null){
+                respVo.setAttrGroupId(relationEntity.getAttrGroupId());
+                AttrGroupEntity attrGroupEntity = attrGroupService.getById(relationEntity.getAttrGroupId());
+                if(attrGroupEntity!=null){
+                    respVo.setGroupName(attrGroupEntity.getAttrGroupName());
+                }
             }
         }
 //        2.设置分类信息
@@ -142,14 +144,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
         //1. 修改分组关联
 
-        boolean existRelation = relationService.count(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()))>0;
-        AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
-        relationEntity.setAttrGroupId(attr.getAttrGroupId());
-        relationEntity.setAttrId(attr.getAttrId());
-        if(existRelation){//看这个关系存在不
-            relationService.update(relationEntity,new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()));
-        }else{
-            relationService.save(relationEntity);
+        if(attrEntity.getAttrType()== ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+            boolean existRelation = relationService.count(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()))>0;
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            relationEntity.setAttrGroupId(attr.getAttrGroupId());
+            relationEntity.setAttrId(attr.getAttrId());
+            if(existRelation){//看这个关系存在不
+                relationService.update(relationEntity,new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()));
+            }else{
+                relationService.save(relationEntity);
+            }
         }
     }
 
