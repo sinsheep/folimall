@@ -2,18 +2,15 @@ package com.ysx.folimall.product.controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ysx.folimall.product.entity.CategoryEntity;
 import com.ysx.folimall.product.service.CategoryService;
-import com.ysx.common.utils.PageUtils;
 import com.ysx.common.utils.R;
 
 
@@ -39,7 +36,7 @@ public class CategoryController {
     public R list(){
 
         List<CategoryEntity> entities = categoryService.listWithTree();
-        return R.ok().put("page", entities);
+        return R.ok().put("data", entities);
     }
 
 
@@ -66,12 +63,21 @@ public class CategoryController {
     }
 
     /**
+     * 批量修改
+     */
+    @RequestMapping("/update/sort")
+    //@RequiresPermissions("product:category:update")
+    public R updateSort(@RequestBody CategoryEntity[] category){
+        categoryService.updateBatchById(Arrays.asList(category));
+        return R.ok();
+    }
+    /**
      * 修改
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+		categoryService.updateCascade(category);
 
         return R.ok();
     }

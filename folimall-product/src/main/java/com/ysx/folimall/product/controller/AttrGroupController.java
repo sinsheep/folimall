@@ -3,6 +3,7 @@ package com.ysx.folimall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.ysx.folimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,20 @@ import com.ysx.common.utils.R;
 public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
+    @Autowired
+    private CategoryService categoryService;
 
+    /**
+     * 列表
+     */
+    @RequestMapping("/list/{catalogId}")
+    //@RequiresPermissions("product:attrgroup:list")
+    public R listInfo(@RequestParam Map<String, Object> params,@PathVariable Long catalogId){
+//        PageUtils page = attrGroupService.queryPage(params);
+
+        PageUtils page = attrGroupService.queryPage(params,catalogId);
+        return R.ok().put("page", page);
+    }
     /**
      * 列表
      */
@@ -50,6 +64,10 @@ public class AttrGroupController {
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
 
+		Long[] path = categoryService.findCatelogPath(attrGroup.getCatelogId());
+
+		attrGroup.setCatelogPath(path);
+        System.out.println(Arrays.asList(path));
         return R.ok().put("attrGroup", attrGroup);
     }
 

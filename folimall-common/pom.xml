@@ -13,6 +13,7 @@
     <description>每一个微服务的公共依赖，bean，工具类等</description>
 
     <dependencies>
+
         <!-- mybatis plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -79,6 +80,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>3.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
     </dependencies>
 

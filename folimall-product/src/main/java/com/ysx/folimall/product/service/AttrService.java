@@ -3,6 +3,8 @@ package com.ysx.folimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ysx.common.utils.PageUtils;
 import com.ysx.folimall.product.entity.AttrEntity;
+import com.ysx.folimall.product.vo.AttrRespVo;
+import com.ysx.folimall.product.vo.AttrVo;
 
 import java.util.Map;
 
@@ -16,5 +18,13 @@ import java.util.Map;
 public interface AttrService extends IService<AttrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveAttr(AttrVo attr);
+
+    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId);
+
+    AttrRespVo getAttrInfo(Long attrId);
+
+    void updateAttr(AttrVo attr);
 }
 
