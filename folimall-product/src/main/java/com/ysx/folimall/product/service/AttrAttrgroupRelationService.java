@@ -3,7 +3,9 @@ package com.ysx.folimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ysx.common.utils.PageUtils;
 import com.ysx.folimall.product.entity.AttrAttrgroupRelationEntity;
+import com.ysx.folimall.product.vo.AttrGroupRelationVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,9 @@ import java.util.Map;
 public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRelationEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void deleteBatchRelation(List<AttrAttrgroupRelationEntity> entities);
+
+    void saveBatch(List<AttrGroupRelationVo> vos);
 }
 
