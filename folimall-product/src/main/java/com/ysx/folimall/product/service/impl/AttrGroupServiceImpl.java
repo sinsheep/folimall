@@ -3,12 +3,11 @@ package com.ysx.folimall.product.service.impl;
 import com.ysx.folimall.product.entity.AttrEntity;
 import com.ysx.folimall.product.service.AttrService;
 import com.ysx.folimall.product.vo.AttrGroupWithAttrsVo;
-import org.bouncycastle.util.Strings;
+import com.ysx.folimall.product.vo.SkuItemVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,6 +89,13 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         }).collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public List<SkuItemVo.SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+        // 查出当前spu对应的所有属性的分组信息和分组下的属性值
+        List<SkuItemVo.SpuItemAttrGroupVo> vos = this.baseMapper.getAttrGroupWithAttrsBySpuId(spuId,catalogId);
+        return vos;
     }
 
 }

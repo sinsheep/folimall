@@ -3,7 +3,9 @@ package com.ysx.folimall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ysx.common.utils.PageUtils;
 import com.ysx.folimall.ware.entity.WareInfoEntity;
+import com.ysx.folimall.ware.vo.FareVo;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface WareInfoService extends IService<WareInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    FareVo getFare(Long addrId);
 }
 

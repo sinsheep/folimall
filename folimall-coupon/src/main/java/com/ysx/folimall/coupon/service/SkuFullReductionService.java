@@ -1,6 +1,7 @@
 package com.ysx.folimall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ysx.common.to.SkuReductionTo;
 import com.ysx.common.utils.PageUtils;
 import com.ysx.folimall.coupon.entity.SkuFullReductionEntity;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface SkuFullReductionService extends IService<SkuFullReductionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSkuReduction(SkuReductionTo skuReductionTo);
 }
 

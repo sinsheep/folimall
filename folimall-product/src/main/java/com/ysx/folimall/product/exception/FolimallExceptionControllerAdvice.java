@@ -27,10 +27,11 @@ public class FolimallExceptionControllerAdvice {
         return R.error(BizCodeEnume.VALID_EXCEPTION.getCode(),BizCodeEnume.VALID_EXCEPTION.getMsg()).put("data",errorMap);
     }
 
-//    @ExceptionHandler(value = Throwable.class)
-//    public R handleException(Throwable throwable){
-//
-//        return R.error(BizCodeEnume.UNKNOW_EXCEPTION.getCode(), BizCodeEnume.UNKNOW_EXCEPTION.getMsg());
-//    }
+    @ExceptionHandler(value = Throwable.class)
+    public R handleException(Throwable throwable){
+
+        throwable.printStackTrace();
+        return R.error(BizCodeEnume.UNKNOW_EXCEPTION.getCode(), BizCodeEnume.UNKNOW_EXCEPTION.getMsg());
+    }
 
 }

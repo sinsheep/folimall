@@ -11,6 +11,7 @@ import com.ysx.folimall.product.vo.AttrRespVo;
 import com.ysx.folimall.product.vo.AttrVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -108,6 +109,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return pageUtils;
     }
 
+    @Cacheable(value = "attr",key = "'attrinfo'+#root.args[0]")
     @Override
     public AttrRespVo getAttrInfo(Long attrId) {
         AttrRespVo respVo = new AttrRespVo();
@@ -237,6 +239,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
         PageUtils pageUtils = new PageUtils(page);
         return pageUtils;
+    }
+
+    @Override
+    public List<Long> selectSearchAttrs(List<Long> attrIds) {
+
+        /**
+         * select attr_id from `pms_attr` where attr_id in(?) and search_type=1;
+         */
+
+        return baseMapper.selectSearchAttrIds(attrIds);
     }
 
 }

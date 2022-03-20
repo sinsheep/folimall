@@ -3,12 +3,9 @@ package com.ysx.folimall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.ysx.common.to.SkuReductionTo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ysx.folimall.coupon.entity.SkuFullReductionEntity;
 import com.ysx.folimall.coupon.service.SkuFullReductionService;
@@ -29,6 +26,14 @@ import com.ysx.common.utils.R;
 public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
+
+
+    @PostMapping("/saveinfo")
+    public R saveInfo(@RequestBody SkuReductionTo skuReductionTo){
+        skuFullReductionService.saveSkuReduction(skuReductionTo);
+        return  R.ok();
+    }
+
 
     /**
      * 列表

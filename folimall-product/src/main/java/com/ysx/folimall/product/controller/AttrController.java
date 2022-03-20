@@ -1,8 +1,11 @@
 package com.ysx.folimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.ysx.folimall.product.entity.ProductAttrValueEntity;
+import com.ysx.folimall.product.service.ProductAttrValueService;
 import com.ysx.folimall.product.vo.AttrRespVo;
 import com.ysx.folimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,16 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+
+    @GetMapping("/base/listforspu/{spuId}")
+    public  R baseAttrList(@PathVariable("spuId") Long spuId){
+
+        List<ProductAttrValueEntity> entities =  productAttrValueService.baseAttrlistForSpu(spuId);
+
+        return R.ok().put("data",entities);
+    }
 
 
     @GetMapping("/{attrType}/list/{catalogId}")
@@ -86,6 +99,15 @@ public class AttrController {
         return R.ok();
     }
 
+    @PostMapping("/update/{spuId}")
+    //@RequiresPermissions("product:attr:update")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> entities) {
+
+        productAttrValueService.updateSpuAttr(spuId,entities);
+
+        return R.ok();
+    }
     /**
      * 删除
      */

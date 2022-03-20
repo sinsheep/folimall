@@ -2,15 +2,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: test_route
-          uri: https://www.baidu.com
-          predicates:
-            - Query=url,baidu
-
-        - id: qq_route
-          uri: https://www.qq.com
-          predicates:
-            - Query=url,qq
 
         - id: product_route
           uri: lb://folimall-product
@@ -33,6 +24,13 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        - id: ware_route
+          uri: lb://folimall-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: admin_route
           uri: lb://renren-fast
           predicates:
@@ -40,3 +38,27 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
+        - id: folimall_host_route
+          uri: lb://folimall-product
+          predicates:
+            - Host=folimall.com,item.folimall.com
+
+        - id: folimall_search_route
+          uri: lb://folimall-search
+          predicates:
+            - Host=search.folimall.com
+
+        - id: folimall_auth_route
+          uri: lb://folimall-auth-server
+          predicates:
+            - Host=auth.folimall.com
+
+        - id: folimall_cart_route
+          uri: lb://folimall-cart
+          predicates:
+            - Host=cart.folimall.com
+
+        - id: folimall_order_route
+          uri: lb://folimall-order
+          predicates:
+            - Host=order.folimall.com

@@ -5,11 +5,7 @@ import java.util.Map;
 
 import com.ysx.folimall.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ysx.folimall.product.entity.SpuInfoEntity;
 import com.ysx.folimall.product.service.SpuInfoService;
@@ -31,13 +27,28 @@ public class SpuInfoController {
     @Autowired
     private SpuInfoService spuInfoService;
 
+
+    @PostMapping("/{spuId}/up")
+    public R spuUp(@PathVariable("spuId") long spuId){
+
+        spuInfoService.up(spuId);
+        return R.ok();
+    }
+
+    @GetMapping("/skuId/{id}")
+    public R getSpuInfoBySkuId(@PathVariable("id")Long skuId){
+        SpuInfoEntity entity = spuInfoService.getSpuInfoBySkuId(skuId);
+        return R.ok().setData(entity);
+    }
+
+
     /**
      * 列表
      */
     @RequestMapping("/list")
     //@RequiresPermissions("product:spuinfo:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuInfoService.queryPage(params);
+        PageUtils page = spuInfoService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }
@@ -62,6 +73,7 @@ public class SpuInfoController {
     public R save(@RequestBody SpuSaveVo vo){
 //		spuInfoService.save(spuInfo);
 
+        spuInfoService.saveSpuInfo(vo);
         return R.ok();
     }
 

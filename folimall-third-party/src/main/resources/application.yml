@@ -3,6 +3,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alicloud:
+      sms:
+        appcode: be3437b4e45d4b5683c70106479d8d7d
   application:
     name: folimall-third-party
 server:

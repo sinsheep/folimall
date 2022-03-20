@@ -1,6 +1,7 @@
 package com.ysx.folimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.ysx.common.valid.AddGroup;
@@ -56,6 +57,13 @@ public class BrandController {
         return R.ok().put("brand", brand);
     }
 
+    @RequestMapping("/infos")
+    public R info(@RequestParam("brandIds") List<Long> brandIds){
+       List<BrandEntity> brands =  brandService.getBrandsByIds(brandIds);
+
+       return R.ok().put("data",brands);
+
+    }
     /**
      * 保存
      */
