@@ -87,7 +87,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                 System.out.println("---"+entity);
                 return entity;
             }else{
-                return null;
+                // TODO: 4/10/22 need to fix 
+                return entity;
             }
         }
     }
